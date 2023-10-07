@@ -1,5 +1,4 @@
 defmodule AwesomeListApp.Aggregate do
-  alias AwesomeListApp.Model.CategoryRepo
   alias AwesomeListApp.Aggregate.GithubHelper
   import AwesomeListApp.Aggregate.HelperRegex
   require Logger
@@ -131,7 +130,7 @@ defmodule AwesomeListApp.Aggregate do
         Logger.info("successful PARSE #{name}")
         Map.put(item, "last_time_commit", last_time_commit)
       else
-        any -> item
+        _any -> item
       end
     rescue
       any ->
