@@ -1,4 +1,25 @@
-<div class=" flex">
+<h1
+    class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
+    Awesome list app</h1>
 
-  <.input name="artem" label="Email" value="asd" />
-</div>
+<% count=@list_category |> Enum.reduce([], fn x, acc -> x.list_repo ++ acc end) |> Enum.count%>
+    <%= "Count library - #{count} " %>
+
+        <%= if count !=0 do %>
+            <%= for item <- @list_category do %>
+                <%= if length(item.list_repo) !=0 do %>
+                    <h2 class="text-2xl font-extrabold dark:text-white mb-5">
+                        <%= item.title %>
+                    </h2>
+
+                    <%= for item <- item.list_repo do %>
+                        <.card title={item.name} stars={item.stars} link={item.link} description={item.description}
+                            time={item.last_time_commit} />
+                     <% end %>
+                        <% end %>
+                            <%= end %>
+                 <% else %>
+           <p>
+            No doesn't have library with stars
+ </p>
+<% end %>

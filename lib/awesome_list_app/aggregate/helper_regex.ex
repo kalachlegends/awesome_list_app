@@ -18,7 +18,7 @@ defmodule AwesomeListApp.Aggregate.HelperRegex do
     try do
       str |> NaiveDateTime.from_iso8601!()
     rescue
-      any -> str
+      _any -> nil
     end
   end
 
@@ -33,9 +33,22 @@ defmodule AwesomeListApp.Aggregate.HelperRegex do
   end
 
   def get_last_commit(body) do
-    Regex.run(~r/\/commit\/.+/iu, body)
+    Regex.run(~r/include-fragment\s+src=".+spoofed.+/iu, body)
     |> get_from_run_first_item
-    |> String.replace(~r/\">.+/, "")
+    |> String.replace(~r/include-fragment\s+src="/, "")
+    |> String.replace(~r/spoofed_commit_check/, "commit")
+    |> String.replace(~r/".+/, "")
+    |> String.replace(~r/\/(\w|d+|-|_)++\/(\w|d+|-|_)+/, "", global: false)
+  end
+
+  def timestamp_to_days(nil), do: nil
+
+  def timestamp_to_days(timestamp) do
+    NaiveDateTime.diff(
+      NaiveDateTime.utc_now(),
+      timestamp,
+      :day
+    )
   end
 
   def get_from_run_first_item(nil), do: ""

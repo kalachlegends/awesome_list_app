@@ -1,4 +1,5 @@
 defmodule AwesomeListApp.Aggregate do
+  alias AwesomeListApp.Model.CategoryRepo
   alias AwesomeListApp.Aggregate.GithubHelper
   import AwesomeListApp.Aggregate.HelperRegex
   require Logger
@@ -11,7 +12,7 @@ defmodule AwesomeListApp.Aggregate do
     end
   end
 
-  def parse_readme(body) do
+  def parse_readme(body, only_parse \\ true) do
     category_str =
       Regex.run(~r/- \[Awesome Elixir\]\(#awesome-elixir\)(-.+|\s{5})+/, body) |> hd()
 
@@ -22,6 +23,8 @@ defmodule AwesomeListApp.Aggregate do
           category
           |> hd()
           |> get_name_str
+
+        category_item = insert_category_or_update_by_parse(category_name, only_parse)
 
         list_libraries =
           Regex.scan(~r/## #{category_name}[^#]+/, body)
@@ -47,6 +50,7 @@ defmodule AwesomeListApp.Aggregate do
                 "link_without_host" => get_host(library_item)
               }
               |> get_information_from_sites
+              |> insert_repository_or_update_by_parse(category_item, only_parse)
             end)
           end)
 
@@ -57,6 +61,37 @@ defmodule AwesomeListApp.Aggregate do
     {:ok, result}
   end
 
+  defp insert_category_or_update_by_parse(name, only_parse) do
+    if !only_parse do
+      {:ok, category} =
+        AwesomeListApp.Model.CategoryRepo.update_or_create(
+          %{title: name},
+          %{
+            title: name
+          }
+        )
+
+      category
+    end
+  end
+
+  def insert_repository_or_update_by_parse(item_repo, category, only_parse) do
+    if !only_parse do
+      case item_repo do
+        {:ok, library} ->
+          AwesomeListApp.Model.Repository.update_or_create(
+            %{link: library["link"]},
+            library |> Map.put("category_id", category.id)
+          )
+
+        any ->
+          any
+      end
+    else
+      item_repo
+    end
+  end
+
   def get_information_from_sites(
         %{"type" => "github", "link_without_host" => link_without_host, "name" => name} = item
       ) do
@@ -65,6 +100,7 @@ defmodule AwesomeListApp.Aggregate do
         # body |> IO.inspect(label: "lib/awesome_list_app/aggregate/aggregate.ex:62")
 
         stars = get_stars_from_html(body)
+
         link_last_commit = get_last_commit(body)
 
         {:ok,
@@ -92,7 +128,7 @@ defmodule AwesomeListApp.Aggregate do
     try do
       with {:ok, %{body: body}} <- GithubHelper.get("#{link_without_host}/#{link_last_commit}") do
         last_time_commit = body |> get_time_from_body_link_last_commit
-        Logger.error("successful PARSE #{name}")
+        Logger.info("successful PARSE #{name}")
         Map.put(item, "last_time_commit", last_time_commit)
       else
         any -> item

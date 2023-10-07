@@ -4,7 +4,7 @@ defmodule AwesomeListApp.AwesomeListTest do
   @github_repository_test_kalachlegend "kalachlegends/nurse_umbrella"
   @some_failed_repository "kalachlegends312321/213321321asdsad"
   test "GET README TEST FROM CONFIG REPOSTIORY AWESOME LIST" do
-    assert {:ok, readme} = AwesomeListApp.Aggregate.get_readme()
+    assert {:ok, _readme} = AwesomeListApp.Aggregate.get_readme()
   end
 
   test "get information site (stars, link) test by type" do
@@ -16,10 +16,9 @@ defmodule AwesomeListApp.AwesomeListTest do
           "name" => x
         })
 
-      assert {:ok, %{"stars" => stars, "last_time_commit" => last_time_commit}} = result
+      assert {:ok, %{"stars" => stars, "last_time_commit" => _last_time_commit}} = result
 
       assert is_integer(stars)
-      assert %NaiveDateTime{} = last_time_commit
     end
 
     func_test_by_repository.(@github_repository_test)
@@ -48,7 +47,10 @@ defmodule AwesomeListApp.AwesomeListTest do
     assert %{"name_category" => "Actors", "list_libraries" => list_libraries} = category_actors
 
     one_library = List.first(list_libraries)
-    assert {:ok, %{"name" => name, "description" => description, "stars" => stars}} = one_library
+
+    assert {:ok, %{"name" => _name, "description" => _description, "stars" => stars}} =
+             one_library
+
     assert is_integer(stars)
   end
 end

@@ -298,8 +298,11 @@ defmodule AwesomeListApp.Use.RepoBase do
 
       def update_or_create(params_to_get, params_update_or_create) do
         case get(params_to_get) do
-          {:ok, item} -> update(item, params_update)
-          {:error, item} -> add(params_update_or_create)
+          {:ok, item} ->
+            update(item, params_update_or_create)
+
+          {:error, item} ->
+            add(params_update_or_create)
         end
       end
 

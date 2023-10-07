@@ -8,10 +8,10 @@ defmodule AwesomeListApp.Model.Repository do
     field(:link_without_host, :string)
     field(:name, :string)
     field(:stars, :integer)
-    field(:timestamp_last_commit, :utc_datetime_usec)
+    field(:last_time_commit, :utc_datetime_usec)
     field(:type, :string)
     field(:category_id, :id)
-
+    field(:link_last_commit, :string)
     timestamps()
   end
 
@@ -24,16 +24,17 @@ defmodule AwesomeListApp.Model.Repository do
       :description,
       :type,
       :stars,
-      :timestamp_last_commit,
+      :last_time_commit,
       :link_without_host,
-      :link
+      :link,
+      :category_id,
+      :link_last_commit
     ])
     |> validate_required([
       :name,
       :description,
       :type,
       :stars,
-      :timestamp_last_commit,
       :link_without_host,
       :link
     ])

@@ -7,11 +7,11 @@ defmodule AwesomeListApp.Repo.Migrations.CreateRepository do
       add(:description, :string)
       add(:type, :string)
       add(:stars, :integer)
-      add(:timestamp_last_commit, :utc_datetime_usec)
+      add(:last_time_commit, :utc_datetime_usec)
       add(:link_without_host, :string)
       add(:link, :string)
       add(:category_id, references(:category, on_delete: :nothing))
-
+      add(:link_last_commit, :string)
       timestamps()
     end
 

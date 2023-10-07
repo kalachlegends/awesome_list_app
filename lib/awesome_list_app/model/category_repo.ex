@@ -5,6 +5,11 @@ defmodule AwesomeListApp.Model.CategoryRepo do
   schema "category" do
     field(:title, :string)
 
+    has_many(:list_repo, AwesomeListApp.Model.Repository,
+      foreign_key: :category_id,
+      preload_order: [desc: :stars]
+    )
+
     timestamps()
   end
 

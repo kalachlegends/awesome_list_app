@@ -4,7 +4,7 @@ defmodule AwesomeListApp.Application do
   @moduledoc false
 
   use Application
-
+  @env Mix.env()
   @impl true
   def start(_type, _args) do
     children = [
@@ -18,9 +18,17 @@ defmodule AwesomeListApp.Application do
       {Finch, name: AwesomeListApp.Finch},
       # Start the Endpoint (http/https)
       AwesomeListAppWeb.Endpoint
+
       # Start a worker by calling: AwesomeListApp.Worker.start_link(arg)
       # {AwesomeListApp.Worker, arg}
     ]
+
+    children =
+      if @env != :test do
+        children ++ [AwesomeListApp]
+      else
+        children
+      end
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
