@@ -1,5 +1,5 @@
 # Awesome list ⭐⭐🌟
-This is my test application for applying to job
+This is my test application for applying to the job.
 ## Technical task
 
 Elixir, like many other languages, has its own "awesome list": h4cc/awesome-elixir. 
