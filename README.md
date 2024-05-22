@@ -1,4 +1,4 @@
-# Awesome list
+# Awesome list ⭐⭐🌟
 This is my test application for applying to job
 ## Technical task
 
