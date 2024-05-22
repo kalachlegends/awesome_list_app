@@ -1,6 +1,6 @@
 # Awesome list
 This is my test application for applying to job
-## Еechnical task
+## Technical task
 
 Elixir, like many other languages, has its own "awesome list": h4cc/awesome-elixir. 
 However, libraries added to it can become outdated, cease to be maintained, or, failing to gain significant popularity, start to be overshadowed by their counterparts.
